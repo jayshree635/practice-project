@@ -17,4 +17,12 @@ router.post('/hunter-signup',uploadImage.uploadImage('profileImages','profile_im
 
 router.post('/email-verify',hunterController.emailVerify);
 
+router.get('/get-hunter-profile',auth.authUser,hunterController.getHunterProfile);
+
+router.patch('/update-hunter-profile',auth.authUser,hunterController.updateHunterProfile)
+
+router.delete('/logout-hunter',auth.authUser,hunterController.logoutHunter);
+
+
+
 module.exports = router

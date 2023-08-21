@@ -1,13 +1,13 @@
 const MESSAGES = {
     // hunter controller
     '1001': 'Signup successfully!',
-    '1002': 'Login successfully!',
-    '1003': 'Logout successfully!',
+    '1002': 'hunter Login successfully!',
+    '1003': 'hunter Logout successfully!',
     '1004': 'Get hunter profile successfully.',
     '1005': 'Upadate user profile successfully.',
     '1006': 'hunter Account deleted successfully.',
     '1007': 'Email already exist.',
-    '1008': 'hunter not found.',
+    '1008': 'user not found.',
     '1009': 'Password does not match.',
     '1010': 'Email or password are not match.',
     '1011': 'user account already exist',
@@ -17,6 +17,7 @@ const MESSAGES = {
     '1015': 'otp time expire Send mail again',
     '1016': 'email not exist',
     '1017': 'check your mail',
+    '1018': 'you are not hunter',
 
     // Admin controller
     '1101' : 'admin is not found first create signup',
@@ -27,25 +28,24 @@ const MESSAGES = {
     '1106': 'Get Admin profile successfully.',
 
 
-    // product categories controller
-    '1201': 'product Categories create successfully!',
-    '1202': 'product Categories  get successfully!',
-    '1203': 'product Categories delete successfully!',
-    '1204': 'product Categories not found!',
-    '1205': 'product Categories update successfully!',
-    '1205': 'product Categories delete successfully!',
+    // company_member categories controller
+    '1201': 'company member add successfully!',
+    '1202': 'company member profile get successfully!',
+    '1203': 'company member delete successfully!',
+    '1204': 'company member not found!',
+    '1205': 'company member update successfully!',
+    '1205': 'company member delete successfully!',
 
 
-    // product controller
-    '1301': 'product create successfully!',
-    '1302': 'product get successfully!',
-    '1303': 'You are not admin!',
-    '1304': 'product delete successfully',
-    '1305': 'product update successfully',
-    '1306': 'Please select video file..',
-    '1307': 'product not found',
-    '1308': 'product quantity not available',
-    '1309': 'product not available in cart ',
+    // companies controller
+    '1301': 'company add successfully!',
+    '1302': 'company login successfully!',
+    '1303': 'company not admin!',
+    '1304': 'company delete successfully',
+    '1305': 'company update successfully',
+    '1306': 'company profile get successfully',
+  
+
 
 
 

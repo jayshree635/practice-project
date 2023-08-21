@@ -56,7 +56,24 @@ module.exports = (sequelize,Sequelize) =>{
 
     },{
         tableName : 'company_members',
-        paranoid : true
-    })
+        paranoid : true,
+
+        defaultScope: {
+            attributes: { exclude: ['deletedAt', 'password'] }
+        },
+
+        scopes: {
+            withPassword: {
+                attributes: { exclude: ['deletedAt'] }
+            }
+        }
+    });
+    company_members.comparePassword = (painText, hash) => bcrypt.compareSync(painText, hash)
+
+    company_members.isExistField = async (whereClause) => {
+        return await company_members.findOne({ where: whereClause })
+    };
+
+
     return company_members
 }

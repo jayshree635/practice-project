@@ -27,7 +27,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         company_logo: {
             type: Sequelize.TEXT,
-            allowNull: true
+            allowNull: true,
+            get() {
+                const rawValue = this.getDataValue('company_logo');
+                return rawValue ? ASSETS.getProfileURL(rawValue, "companyLogo") : null;
+            }
         },
         createdAt: {
             field: 'created_at',
@@ -47,7 +51,23 @@ module.exports = (sequelize, Sequelize) => {
 
     }, {
         tableName: 'companies',
-        paranoid: true
+        paranoid: true,
+
+        defaultScope: {
+            attributes: { exclude: ['deletedAt', 'password'] }
+        },
+
+        scopes: {
+            withPassword: {
+                attributes: { exclude: ['deletedAt'] }
+            }
+        }
     });
+
+    company.comparePassword = (painText, hash) => bcrypt.compareSync(painText, hash)
+
+    company.isExistField = async (whereClause) => {
+        return await company.findOne({ where: whereClause })
+    };
     return company
 }

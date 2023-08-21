@@ -10,7 +10,9 @@ const UserSession = db.UserSession;
 //..........utils.................
 
 const mailUtils = require('../utils/sendMail')
+const checkEmail = require('../utils/function')
 
+//.....................hunter signUp...........................
 const hunterSignup = async (req, res) => {
     let validation = new Validator(req.body, {
         username: 'required|string|max:50',
@@ -34,9 +36,14 @@ const hunterSignup = async (req, res) => {
 
         const findHunter = await Hunter.findOne({ where: { email: email } });
 
+        // const findHunter = checkEmail.checkEmail(email);
+        // if (data) {
+        //     return RESPONSE.error(res, 1007)
+        // }
+
         if (findHunter) {
             if (findHunter.isVerify == 1) {
-                return RESPONSE.error(res, "user account exist")
+                return RESPONSE.error(res, 1007)
             };
             await findHunter.update({ otp });
         } else {
@@ -94,10 +101,105 @@ const emailVerify = async (req, res) => {
 }
 
 
+//..................get hunter profile.................
+const getHunterProfile = async (req, res) => {
+    try {
+        const authUser = req.user;
+        if (authUser.role != 'hunter') {
+            return RESPONSE.error(res, 1018)
+        }
 
+        const findHunter = await Hunter.findOne({ where: { id: authUser.id } });
+
+        if (!findHunter) {
+            return RESPONSE.error(res, 1008)
+        }
+
+        return RESPONSE.success(res, 1004, findHunter)
+    } catch (error) {
+        console.log(error);
+        return RESPONSE.error(res, 9999)
+    }
+}
+
+
+//.....................update hunter profile...............
+const updateHunterProfile = async (req, res) => {
+    let validation = new Validator(req.body, {
+        username: 'string|max:50',
+        current_password: 'required_with:new_password|min:6|max:15',
+        new_password: 'min:6|max:15'
+    });
+
+    if (validation.fails()) {
+        firstMessage = Object.keys(validation.errors.all())[0];
+        return RESPONSE.error(res, validation.errors.first(firstMessage))
+    };
+
+    try {
+        const { username, current_password, new_password } = req.body;
+        const profile_image = req?.file?.filename;
+
+        const authUser = req.user;
+        if (authUser.role != "hunter") {
+            return RESPONSE.error(res, 1018)
+        }
+
+        let object = {
+            username
+        }
+
+        const findHunter = await Hunter.scope('withPassword').findOne({ where: { id: authUser.id } });
+        if (!findHunter) {
+            return RESPONSE.error(res, 1008)
+        }
+
+        if (new_password) {
+            if (!await Admin.comparePassword(current_password, findAdmin.password)) {
+                return RESPONSE.error(res, 1010);
+            }
+            object.password = new_password;
+        };
+
+        if (profile_image) {
+            if (findAdmin.profile_image) {
+                await FILEACTION.deleteFile(path.basename(findAdmin.profile_image), 'images/profileImages');
+            }
+            object.profile_image = profile_image;
+        }
+
+        const HunterData = await Hunter.update(object, { where: { id: authUser.id } });
+        console.log(HunterData);
+        return RESPONSE.success(res, 1005, HunterData)
+
+    } catch (error) {
+        console.log(error);
+        return RESPONSE.error(res, 9999)
+    }
+}
+
+//.................logout
+const logoutHunter = async (req, res) => {
+    try {
+        const authUser = req.user;
+        if (authUser.role != 'hunter') {
+            return RESPONSE.error(res, 1018)
+        }
+
+        await UserSession.destroy({ where: { token: req.headers.authorization } });
+
+        return RESPONSE.success(res, 1003)
+    } catch (error) {
+        console.log(error);
+        return RESPONSE.error(res, 9999)
+    }
+}
 
 
 module.exports = {
     hunterSignup,
     emailVerify,
+    logoutHunter,
+    getHunterProfile,
+    updateHunterProfile
 }

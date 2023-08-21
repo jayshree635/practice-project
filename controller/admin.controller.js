@@ -15,9 +15,12 @@ Validator.register('phone_length', (value) => {
 //......................get admin profile...............
 const getAdminProfile = async (req, res) => {
     try {
-        const authAdmin = req.user;
+        const authUser = req.user;
+        if (authUser.role != 'admin') {
+            return RESPONSE.error(res,1105)
+        }
 
-        const findAdmin = await Admin.findOne({ where: { id: authAdmin.id } });
+        const findAdmin = await Admin.findOne({ where: { id: authUser.id } });
         if (!findAdmin) {
             return RESPONSE.error(res, 1103)
         }
@@ -25,13 +28,12 @@ const getAdminProfile = async (req, res) => {
         delete findAdmin.password;
 
         return RESPONSE.success(res, 1106, findAdmin)
-    }
-    catch {
+    } catch (error) {
         console.log(error);
         return RESPONSE.error(res, 9999)
     }
-}
 
+}
 
 //............update - admin - profile.............
 const updateAdminProfile = async (req, res) => {
@@ -48,7 +50,10 @@ const updateAdminProfile = async (req, res) => {
     };
 
     try {
-        const authAdmin = req.user;
+        const authUser = req.user;
+        if (authUser.role != 'admin') {
+            return RESPONSE.error(res,1105)
+        }
 
         const { name, current_password, new_password, phone_no } = req.body;
         const profile_image = req?.file?.filename;
@@ -90,7 +95,10 @@ const updateAdminProfile = async (req, res) => {
 
 const logoutAdmin = async(req,res)=>{
     try {
-        const authAdmin = req.user;
+        const authUser = req.user;
+        if (authUser.role != 'admin') {
+            return RESPONSE.error(res,1105)
+        }
         
         await UserSession.destroy({where : {token : req.headers.authorization}});
 
