@@ -68,7 +68,7 @@ module.exports = (sequelize, Sequelize) => {
     admin.isExistField = async (whereClause) => {
         return await User.findOne({ where: whereClause })
     };
-  
+
 
     return admin
 }

@@ -1,4 +1,3 @@
-
 const bcrypt = require('bcryptjs')
 
 module.exports = (sequelize, Sequelize) => {
@@ -31,15 +30,11 @@ module.exports = (sequelize, Sequelize) => {
                 return rawValue ? ASSETS.getProfileURL(rawValue, "profileImages") : null;
             }
         },
-        Auditor_role : {
-            type : Sequelize.ENUM('Senior_auditor','Auditor','null'),
-            defaultValue : 'null'
+        Auditor_role: {
+            type: Sequelize.ENUM('Senior_auditor', 'Auditor', 'null'),
+            defaultValue: 'null'
         },
-        // Auditor_role: {
-        //     type: Sequelize.ENUM('Senior_auditor', 'Auditor', 'null'),
-        //     defaultValue: 'null',
-        //   },
-          
+
         otp: {
             type: Sequelize.INTEGER,
 

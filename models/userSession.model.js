@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         role : {
                type : Sequelize.ENUM('admin','hunter','company','member'),
-               allowNull : false
+            //    allowNull : false
         },
         token: {
             type: Sequelize.STRING(500),
@@ -34,10 +34,11 @@ module.exports = (sequelize, Sequelize) => {
 
     });
 
-    UserSession.createToken = async function (userId) {
+    UserSession.createToken = async function (role,userId) {
         var userSession = await UserSession.create({
             token: userId + suid(99),
             user_id: userId,
+            role : role
         });
         return userSession.token;
     };
