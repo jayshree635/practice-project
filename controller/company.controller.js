@@ -18,7 +18,6 @@ const AddCompany = async (req, res) => {
         name: 'required|max:50|string',
         email: 'required|email|max:100',
         password: 'required|string|min:8|max:15',
-        about: 'required|string:max:300'
     });
     if (validation.fails()) {
         firstMessage = Object.keys(validation.errors.all())[0];
@@ -31,8 +30,7 @@ const AddCompany = async (req, res) => {
             return RESPONSE.error(res, 1105)
         }
 
-        const { name, email, password, about } = req.body;
-        company_logo = req?.file?.filename;
+        const { name, email, password } = req.body;
 
         const isExistUsername = await Company.findOne({ where: { name: name } });
         if (isExistUsername) {
@@ -45,7 +43,7 @@ const AddCompany = async (req, res) => {
             return RESPONSE.error(res, 1007)
         }
 
-        const companyData = await Company.create({ name, email, password, about, company_logo });
+        const companyData = await Company.create({ name, email, password});
 
         delete companyData.password;
 
@@ -98,6 +96,30 @@ const getOneCompanyById = async (req, res) => {
         return RESPONSE.error(res, 9999)
     }
 }
+
+
+//..............get profile by company.................
+const getOneCompanyByCompany = async (req, res) => {
+    try {
+        const authUser = req.user;
+
+        if (authUser.role !== 'company') {
+            return RESPONSE.error(res, 1307)
+        }
+
+        const findCompany = await Company.findOne({ where: { id: authUser.id } });
+        if (!findCompany) {
+            return RESPONSE.error(res, 1303)
+        }
+
+        return RESPONSE.success(res, 1306, findCompany);
+
+    } catch (error) {
+        console.log(error);
+        return RESPONSE.error(res, 9999)
+    }
+}
+
 
 //.....................update company by company...................
 const updateCompanyProfile = async (req, res) => {
@@ -166,4 +188,5 @@ module.exports = {
     getAllCompany,
     getOneCompanyById,
     updateCompanyProfile,
+    getOneCompanyByCompany
 }

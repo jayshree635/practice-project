@@ -34,7 +34,9 @@ const MESSAGES = {
     '1203': 'company member delete successfully!',
     '1204': 'company member not found!',
     '1205': 'company member update successfully!',
-    '1205': 'company member delete successfully!',
+    '1206': 'company member delete successfully!',
+    '1207': 'company member already exist!',
+    '1208': 'you are not company member ',
 
 
     // companies controller

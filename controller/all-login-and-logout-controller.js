@@ -84,8 +84,7 @@ const login = async (req, res) => {
                 const companyMemberJson = isCompanyMember.toJSON();
                 companyMemberJson.token = await UserSession.createToken(role, isCompanyMember.id);
                 delete isCompanyMember.password;
-                return RESPONSE.success(res)
-            }
+                return RESPONSE.success(res, 1302, companyMemberJson)            }
             else {
                 return RESPONSE.error(res, 1010);
             }
@@ -109,10 +108,7 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
     try {
         const authUser = req.user;
-        if (authUser.role != 'admin' && authUser.role != 'company' && authUser.role != 'hunter' && authUser.role != 'member') {
-            return RESPONSE.error(res, 1008)
-        }
-
+        
         await UserSession.destroy({ where: { token: req.headers.authorization } })
 
         return RESPONSE.success(res, 1309,)

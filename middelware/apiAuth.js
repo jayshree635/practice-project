@@ -16,7 +16,6 @@ var authUser = async function (req, res, next) {
     if (isAuth != null) {
         if (isAuth.role == 'admin') {
             const admin = await Admin.findOne({ where: { id: isAuth.user_id }, attributes: ["id"] });
-
             if (!admin) {
                 return res.status(401).json({
                     success: false,
@@ -42,7 +41,8 @@ var authUser = async function (req, res, next) {
             next()
 
         } else if (isAuth.role == 'company') {
-            const Company = await company.findOne({ where: { id: isAuth.user_id} });
+            const Company = await company.findOne({ where: { id: isAuth.user_id } });
+
             if (!Company) {
                 return res.status(401).json({
                     success: false,
@@ -53,8 +53,9 @@ var authUser = async function (req, res, next) {
             req.user = Company;
             next();
 
-        }else if(isAuth.role == 'member'){
-            const companyMember = await CompanyMember.findOne({where : isAuth.user_id,attributes:["id","company_id","email","username"]});
+        } else if (isAuth.role == 'member') {
+            const companyMember = await CompanyMember.findOne({ where:{id : isAuth.user_id }});
+
             if (!companyMember) {
                 return res.status(401).json({
                     success: false,
@@ -64,7 +65,7 @@ var authUser = async function (req, res, next) {
             companyMember.role = 'member';
             req.user = companyMember;
             next();
-        }else{
+        } else {
             return res.status(401).json({
                 success: false,
                 message: 'Unauthorized user',
