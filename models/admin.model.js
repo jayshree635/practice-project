@@ -66,7 +66,7 @@ module.exports = (sequelize, Sequelize) => {
     admin.comparePassword = (painText, hash) => bcrypt.compareSync(painText, hash)
 
     admin.isExistField = async (whereClause) => {
-        return await User.findOne({ where: whereClause })
+        return await admin.findOne({ where: whereClause })
     };
 
 

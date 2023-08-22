@@ -10,29 +10,33 @@ const CompanyMember = db.Company_members;
 
 async function checkEmail(email) {
     try {
-        const isExistEmailAdmin = await Admin.findOne({ email: email ,isVerify : 1});
-        const isExistEmailHunter = await Hunter.findOne({ email: email });
-        const isExistEmailCompany = await Company.findOne({ email: email });
-        const isExistEmailCompanyMember = await CompanyMember.findOne({ email: email });
+        const isExistEmailAdmin = await Admin.findOne({ where: { email: email } });
+        const isExistEmailHunter = await Hunter.findOne({ where: { email: email, isVerify: true } });
+        const isExistEmailCompany = await Company.findOne({ where: { email: email } });
+        const isExistEmailCompanyMember = await CompanyMember.findOne({ where: { email: email } });
 
         if (isExistEmailAdmin) {
-            return false
-        }
-
-        if (isExistEmailHunter) {
-            return false;
+            isExistEmailAdmin.role = 'admin';
+            return {status:true,userData : isExistEmailAdmin}
         }
 
         if (isExistEmailCompany) {
-            return false;
+            isExistEmailCompany.role = 'company';
+            return {status:true,userData : isExistEmailCompany}
+        }
+
+        if (isExistEmailHunter) {
+            isExistEmailHunter.role = 'hunter';
+            return {status:true,userData : isExistEmailHunter}
         }
 
         if (isExistEmailCompanyMember) {
-            return false;
+            isExistEmailCompanyMember.role = 'member';
+            return {status:true,userData : isExistEmailCompanyMember}
         }
-
-        return true
+        return false
     } catch (error) {
+        console.log(error);
         return false
     }
 

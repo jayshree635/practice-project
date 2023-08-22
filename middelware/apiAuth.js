@@ -42,8 +42,7 @@ var authUser = async function (req, res, next) {
             next()
 
         } else if (isAuth.role == 'company') {
-            const Company = await company.findOne({ where: { id: isAuth.user_id, attributes: ["id"] } });
-
+            const Company = await company.findOne({ where: { id: isAuth.user_id} });
             if (!Company) {
                 return res.status(401).json({
                     success: false,
@@ -83,31 +82,7 @@ var authUser = async function (req, res, next) {
 }
 
 
-// const authUser = async function (req, res, next) {
-//     const headerToken = req.headers.authorization ? req.headers.authorization : null;
-//     const isAuth = await UserSession.findOne({ where: { token: headerToken } });
 
-//     if (isAuth != null) {
-//         if (isAuth.role === 'hunter' || isAuth.role === 'member' || isAuth.role === 'company' || isAuth.role === 'admin') {
-
-//             req.user = isAuth
-//             next();
-//         } else {
-//             console.log("ok1");
-//             return res.status(403).json({
-//                 success: false,
-//                 message: ' Invalid Role.',
-//             });
-//         }
-
-//     } else {
-//         console.log("ok1");
-//         return res.status(401).json({
-//             success: false,
-//             message: 'Unauthorized Users.',
-//         });
-//     }
-// };
 
 module.exports = {
     authUser,

@@ -39,10 +39,10 @@ db.Company_members = require('../models/company_members.model')(sequelize,Sequel
 db.UserSession = require('../models/userSession.model')(sequelize,Sequelize)
 //........................relations..........................
 
-// db.Admin.hasMany(db.AdminSession,{foreignKey : 'admin_id'});
 
-// db.Company.hasMany(db.Company_members,{foreignKey : 'company_id'})
-// db.Company_members.hasMany(db.Company,{foreignKey : 'company_id'})
 
-db.sequelize.sync({alter :true})
+db.Company.hasMany(db.Company_members,{foreignKey : 'company_id'})
+db.Company_members.belongsTo(db.Company,{foreignKey : 'company_id'})
+
+// db.sequelize.sync({alter : true})
 module.exports = db

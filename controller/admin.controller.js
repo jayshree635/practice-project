@@ -17,7 +17,7 @@ const getAdminProfile = async (req, res) => {
     try {
         const authUser = req.user;
         if (authUser.role != 'admin') {
-            return RESPONSE.error(res,1105)
+            return RESPONSE.error(res, 1105)
         }
 
         const findAdmin = await Admin.findOne({ where: { id: authUser.id } });
@@ -52,7 +52,7 @@ const updateAdminProfile = async (req, res) => {
     try {
         const authUser = req.user;
         if (authUser.role != 'admin') {
-            return RESPONSE.error(res,1105)
+            return RESPONSE.error(res, 1105)
         }
 
         const { name, current_password, new_password, phone_no } = req.body;
@@ -63,11 +63,12 @@ const updateAdminProfile = async (req, res) => {
             phone_no
         }
 
-        const findAdmin = await Admin.scope('withPassword').findOne({ where: { id: authAdmin.id } });
+        const findAdmin = await Admin.scope('withPassword').findOne({ where: { id: authUser.id } });
         if (!findAdmin) {
             return RESPONSE.error(res, 1103);
 
         }
+
         if (new_password) {
             if (!await Admin.comparePassword(current_password, findAdmin.password)) {
                 return RESPONSE.error(res, 1010);
@@ -82,7 +83,7 @@ const updateAdminProfile = async (req, res) => {
             object.profile_image = profile_image;
         }
 
-        const adminData = await Admin.update(object, { where: { id: authAdmin.id } });
+        const adminData = await Admin.update(object, { where: { id: authUser.id } });
         return RESPONSE.success(res, 1104, adminData);
 
     } catch (error) {
@@ -91,25 +92,7 @@ const updateAdminProfile = async (req, res) => {
     }
 }
 
-//................................logout admin..................
-
-const logoutAdmin = async(req,res)=>{
-    try {
-        const authUser = req.user;
-        if (authUser.role != 'admin') {
-            return RESPONSE.error(res,1105)
-        }
-        
-        await UserSession.destroy({where : {token : req.headers.authorization}});
-
-        return RESPONSE.success (res,1102)
-    } catch (error) {
-        console.log(error);
-        return RESPONSE.error(res, 9999)
-    }
-}
 module.exports = {
     getAdminProfile,
     updateAdminProfile,
-    logoutAdmin
 }

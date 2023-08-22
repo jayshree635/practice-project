@@ -9,6 +9,9 @@ const Company = db.Company;
 const CompanyMember = db.Company_members;
 const UserSession = db.UserSession;
 
+//................utils...............
+const checkEmail = require('../utils/function');
+
 //..........................all login api......................
 const login = async (req, res) => {
     let validation = new Validator(req.body, {
@@ -56,7 +59,6 @@ const login = async (req, res) => {
                 return RESPONSE.success(res, 1102, adminJson)
             } else {
                 return RESPONSE.error(res, 1010);
-
             }
 
         } else if (isCompany) {
@@ -71,7 +73,6 @@ const login = async (req, res) => {
                 return RESPONSE.success(res, 1302, companyJson)
             } else {
                 return RESPONSE.error(res, 1010);
-
             }
 
         } else if (isCompanyMember) {
@@ -87,7 +88,6 @@ const login = async (req, res) => {
             }
             else {
                 return RESPONSE.error(res, 1010);
-
             }
 
         }
@@ -105,6 +105,25 @@ const login = async (req, res) => {
 }
 
 
+//..................all logout api..............
+const logout = async (req, res) => {
+    try {
+        const authUser = req.user;
+        if (authUser.role != 'admin' && authUser.role != 'company' && authUser.role != 'hunter' && authUser.role != 'member') {
+            return RESPONSE.error(res, 1008)
+        }
+
+        await UserSession.destroy({ where: { token: req.headers.authorization } })
+
+        return RESPONSE.success(res, 1309,)
+    } catch (error) {
+        console.log(error);
+        return RESPONSE.error(res, 9999)
+    }
+}
+
+
 module.exports = {
-    login
+    login,
+    logout
 }

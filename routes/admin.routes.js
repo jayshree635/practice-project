@@ -18,11 +18,16 @@ router.get('/get-admin-profile',auth.authUser,adminController.getAdminProfile);
 
 router.patch('/update-admin-profile',auth.authUser,uploadImage.uploadImage('profileImages','profile_image'),adminController.updateAdminProfile);
 
-router.delete('/logout-admin',auth.authUser,adminController.logoutAdmin)
-
 
 //.........................company.......................
 
-router.post('/add-companies',auth.authUser,uploadImage.uploadImage('companyLogo','company_logo'),companyController.AddCompany)
+router.post('/add-companies',auth.authUser,uploadImage.uploadImage('companyLogo','company_logo'),companyController.AddCompany);
+
+router.get('/get-all-company-by-admin',auth.authUser,companyController.getAllCompany);
+
+router.get('/get-company-by-id',auth.authUser,companyController.getOneCompanyById);
+
+router.patch('/update-company-by-company',auth.authUser,uploadImage.uploadImage('companyLogo','company_logo'),companyController.updateCompanyProfile);
+
 
 module.exports = router

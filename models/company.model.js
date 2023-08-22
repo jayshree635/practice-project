@@ -64,10 +64,10 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    company.comparePassword = (painText, hash) => bcrypt.compareSync(painText, hash)
+    company.comparePassword = (painText, hash) => bcrypt.compareSync(painText, hash);
 
     company.isExistField = async (whereClause) => {
-        return await company.findOne({ where: whereClause })
+        return await company.findOne({ where: whereClause });
     };
     return company
 }

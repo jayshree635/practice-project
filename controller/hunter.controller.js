@@ -1,6 +1,6 @@
 const Validator = require('validatorjs');
 const db = require('../config/db.config');
-
+const path = require('path')
 
 //............models....
 const Hunter = db.Hunter;
@@ -29,17 +29,23 @@ const hunterSignup = async (req, res) => {
         const profile_image = req?.file?.filename;
 
         const otp = Math.floor(100000 + Math.random() * 9000);
-
         const currentTime = Date.now();
         const expirationMinutes = 120;
         const opt_time = new Date(currentTime + expirationMinutes * 60 * 1000);
 
-        const findHunter = await Hunter.findOne({ where: { email: email } });
 
-        // const findHunter = checkEmail.checkEmail(email);
-        // if (data) {
-        //     return RESPONSE.error(res, 1007)
-        // }
+        const checkmail = await checkEmail.checkEmail(email);
+        if (checkmail) {
+            return RESPONSE.error(res, 1007)
+        }
+
+        const isExistUsername = await Hunter.findOne({ where: { username: username } });
+        if (isExistUsername) {
+            return RESPONSE.error(res, "username already exist")
+        }
+
+
+        const findHunter = await Hunter.findOne({ where: { email: email } });
 
         if (findHunter) {
             if (findHunter.isVerify == 1) {
@@ -60,7 +66,7 @@ const hunterSignup = async (req, res) => {
 }
 
 
-//................hunter Email Verify.........
+//................hunter Email Verify................
 const emailVerify = async (req, res) => {
     let validation = new Validator(req.body, {
         email: 'required',
@@ -101,7 +107,7 @@ const emailVerify = async (req, res) => {
 }
 
 
-//..................get hunter profile.................
+//..................get hunter profile......................
 const getHunterProfile = async (req, res) => {
     try {
         const authUser = req.user;
@@ -123,14 +129,13 @@ const getHunterProfile = async (req, res) => {
 }
 
 
-//.....................update hunter profile...............
+//.....................update hunter profile................
 const updateHunterProfile = async (req, res) => {
     let validation = new Validator(req.body, {
         username: 'string|max:50',
-        current_password: 'required_with:new_password|min:6|max:15',
+        current_password: 'required|min:6|max:15',
         new_password: 'min:6|max:15'
     });
-
     if (validation.fails()) {
         firstMessage = Object.keys(validation.errors.all())[0];
         return RESPONSE.error(res, validation.errors.first(firstMessage))
@@ -149,46 +154,34 @@ const updateHunterProfile = async (req, res) => {
             username
         }
 
+        const isExistUsername = await Hunter.findOne({ where: { username: username } });
+        if (isExistUsername) {
+            return RESPONSE.error(res, "username already exist")
+        }
+
         const findHunter = await Hunter.scope('withPassword').findOne({ where: { id: authUser.id } });
         if (!findHunter) {
             return RESPONSE.error(res, 1008)
         }
 
         if (new_password) {
-            if (!await Admin.comparePassword(current_password, findAdmin.password)) {
+            if (!await Hunter.comparePassword(current_password, findHunter.password)) {
                 return RESPONSE.error(res, 1010);
             }
             object.password = new_password;
         };
 
         if (profile_image) {
-            if (findAdmin.profile_image) {
-                await FILEACTION.deleteFile(path.basename(findAdmin.profile_image), 'images/profileImages');
+            if (findHunter.profile_image) {
+                await FILEACTION.deleteFile(path.basename(findHunter.profile_image), 'images/profileImages');
             }
             object.profile_image = profile_image;
         }
 
         const HunterData = await Hunter.update(object, { where: { id: authUser.id } });
-        console.log(HunterData);
+
         return RESPONSE.success(res, 1005, HunterData)
 
-    } catch (error) {
-        console.log(error);
-        return RESPONSE.error(res, 9999)
-    }
-}
-
-//.................logout
-const logoutHunter = async (req, res) => {
-    try {
-        const authUser = req.user;
-        if (authUser.role != 'hunter') {
-            return RESPONSE.error(res, 1018)
-        }
-
-        await UserSession.destroy({ where: { token: req.headers.authorization } });
-
-        return RESPONSE.success(res, 1003)
     } catch (error) {
         console.log(error);
         return RESPONSE.error(res, 9999)
@@ -199,7 +192,6 @@ const logoutHunter = async (req, res) => {
 module.exports = {
     hunterSignup,
     emailVerify,
-    logoutHunter,
     getHunterProfile,
     updateHunterProfile
 }

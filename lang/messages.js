@@ -40,10 +40,13 @@ const MESSAGES = {
     // companies controller
     '1301': 'company add successfully!',
     '1302': 'company login successfully!',
-    '1303': 'company not admin!',
-    '1304': 'company delete successfully',
-    '1305': 'company update successfully',
-    '1306': 'company profile get successfully',
+    '1303': 'company not found!',
+    '1304': 'company delete successfully.',
+    '1305': 'company update successfully.',
+    '1306': 'company profile get successfully.',
+    '1307': 'you are not company.',
+    '1308': 'name is already exist.',
+    '1309': 'logout successfully.....',
   
 
 
