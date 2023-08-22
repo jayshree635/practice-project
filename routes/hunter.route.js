@@ -13,13 +13,13 @@ const hunterController = require('../controller/hunter.controller');
 
 //....................routes..................
 
-router.post('/hunter-signup',uploadImage.uploadImage('profileImages','profile_image'),hunterController.hunterSignup);
+router.post('/hunter-signup', uploadImage.uploadImage('profileImages', 'profile_image'), hunterController.hunterSignup);
 
-router.post('/email-verify',hunterController.emailVerify);
+router.post('/email-verify', hunterController.emailVerify);
 
-router.get('/get-hunter-profile',auth.authUser,hunterController.getHunterProfile);
+router.get('/get-hunter-profile', auth.authUser, hunterController.getHunterProfile);
 
-router.patch('/update-hunter-profile',auth.authUser,uploadImage.uploadImage('profileImages','profile_image'),hunterController.updateHunterProfile)
+router.patch('/update-hunter-profile', auth.authUser, uploadImage.uploadImage('profileImages', 'profile_image'), hunterController.updateHunterProfile)
 
 
 

@@ -2,12 +2,12 @@ var suid = require('rand-token').suid;
 
 module.exports = (sequelize, Sequelize) => {
     const UserSession = sequelize.define('user_sessions', {
-        user_id : {
-            type : Sequelize.STRING,
-            allowNull : false
+        user_id: {
+            type: Sequelize.STRING,
+            allowNull: false
         },
-        role : {
-               type : Sequelize.ENUM('admin','hunter','company','member'),
+        role: {
+            type: Sequelize.ENUM('admin', 'hunter', 'company', 'member'),
             //    allowNull : false
         },
         token: {
@@ -34,11 +34,11 @@ module.exports = (sequelize, Sequelize) => {
 
     });
 
-    UserSession.createToken = async function (role,userId) {
+    UserSession.createToken = async function (role, userId) {
         var userSession = await UserSession.create({
             token: userId + suid(99),
             user_id: userId,
-            role : role
+            role: role
         });
         return userSession.token;
     };

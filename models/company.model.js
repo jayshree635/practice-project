@@ -69,6 +69,6 @@ module.exports = (sequelize, Sequelize) => {
     company.isExistField = async (whereClause) => {
         return await company.findOne({ where: whereClause });
     };
-    
+
     return company
 }

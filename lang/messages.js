@@ -20,7 +20,7 @@ const MESSAGES = {
     '1018': 'you are not hunter',
 
     // Admin controller
-    '1101' : 'admin is not found first create signup',
+    '1101': 'admin is not found first create signup',
     '1102': ' admin Login successfully!.',
     '1103': 'Admin not found.',
     '1104': 'update admin profile successfully',
@@ -49,7 +49,7 @@ const MESSAGES = {
     '1307': 'you are not company.',
     '1308': 'name is already exist.',
     '1309': 'logout successfully.....',
-  
+
 
 
 

@@ -12,7 +12,8 @@ const AllLoginController = require('../controller/all-login-and-logout-controlle
 
 //....................routes..................
 
-router.post('/login',AllLoginController.login)
+router.post('/login', AllLoginController.login);
 
-router.delete('/logout',auth.authUser,AllLoginController.logout)
+router.delete('/logout', auth.authUser, AllLoginController.logout);
+
 module.exports = router

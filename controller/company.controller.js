@@ -43,7 +43,7 @@ const AddCompany = async (req, res) => {
             return RESPONSE.error(res, 1007)
         }
 
-        const companyData = await Company.create({ name, email, password});
+        const companyData = await Company.create({ name, email, password });
 
         delete companyData.password;
 

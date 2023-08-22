@@ -54,7 +54,7 @@ var authUser = async function (req, res, next) {
             next();
 
         } else if (isAuth.role == 'member') {
-            const companyMember = await CompanyMember.findOne({ where:{id : isAuth.user_id }});
+            const companyMember = await CompanyMember.findOne({ where: { id: isAuth.user_id } });
 
             if (!companyMember) {
                 return res.status(401).json({

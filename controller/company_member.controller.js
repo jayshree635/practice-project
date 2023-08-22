@@ -159,9 +159,9 @@ const updateMemberProfile = async (req, res) => {
         }
 
         const MemberData = await CompanyMember.update(object, { where: { id: authUser.id } });
-        
 
-        return RESPONSE.success(res, 1205,MemberData)
+
+        return RESPONSE.success(res, 1205, MemberData)
     } catch (error) {
         console.log(error);
         return RESPONSE.error(res, 9999)

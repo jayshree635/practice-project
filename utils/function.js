@@ -17,22 +17,22 @@ async function checkEmail(email) {
 
         if (isExistEmailAdmin) {
             isExistEmailAdmin.role = 'admin';
-            return {status:true,userData : isExistEmailAdmin}
+            return { status: true, userData: isExistEmailAdmin }
         }
 
         if (isExistEmailCompany) {
             isExistEmailCompany.role = 'company';
-            return {status:true,userData : isExistEmailCompany}
+            return { status: true, userData: isExistEmailCompany }
         }
 
         if (isExistEmailHunter) {
             isExistEmailHunter.role = 'hunter';
-            return {status:true,userData : isExistEmailHunter}
+            return { status: true, userData: isExistEmailHunter }
         }
 
         if (isExistEmailCompanyMember) {
             isExistEmailCompanyMember.role = 'member';
-            return {status:true,userData : isExistEmailCompanyMember}
+            return { status: true, userData: isExistEmailCompanyMember }
         }
         return false
     } catch (error) {
