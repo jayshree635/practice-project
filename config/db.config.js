@@ -31,18 +31,18 @@ db.sequelize = sequelize;
 
 db.Admin = require('../models/admin.model')(sequelize, Sequelize);
 
-db.Hunter = require('../models/hunter.model')(sequelize, Sequelize)
+db.Hunter = require('../models/hunter.model')(sequelize, Sequelize);
 
-db.Company = require('../models/company.model')(sequelize, Sequelize)
-db.Company_members = require('../models/company_members.model')(sequelize, Sequelize)
+db.Company = require('../models/company.model')(sequelize, Sequelize);
+db.Company_members = require('../models/company_members.model')(sequelize, Sequelize);
 
-db.UserSession = require('../models/userSession.model')(sequelize, Sequelize)
+db.UserSession = require('../models/userSession.model')(sequelize, Sequelize);
 //........................relations..........................
 
 
 
-db.Company.hasMany(db.Company_members, { foreignKey: 'company_id' })
-db.Company_members.belongsTo(db.Company, { foreignKey: 'company_id' })
+db.Company.hasMany(db.Company_members, { foreignKey: 'company_id' });
+db.Company_members.belongsTo(db.Company, { foreignKey: 'company_id' });
 
-db.sequelize.sync({ alter: true })
-module.exports = db
+// db.sequelize.sync({ alter: true });
+module.exports = db;

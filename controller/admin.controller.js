@@ -1,6 +1,6 @@
 const Validator = require('validatorjs');
 const db = require('../config/db.config');
-const path = require('path')
+const path = require('path');
 
 //............models....
 const Admin = db.Admin;
@@ -17,20 +17,20 @@ const getAdminProfile = async (req, res) => {
     try {
         const authUser = req.user;
         if (authUser.role != 'admin') {
-            return RESPONSE.error(res, 1105)
+            return RESPONSE.error(res, 1105);
         }
 
         const findAdmin = await Admin.findOne({ where: { id: authUser.id } });
         if (!findAdmin) {
-            return RESPONSE.error(res, 1103)
+            return RESPONSE.error(res, 1103);
         }
 
         delete findAdmin.password;
 
-        return RESPONSE.success(res, 1106, findAdmin)
+        return RESPONSE.success(res, 1106, findAdmin);
     } catch (error) {
         console.log(error);
-        return RESPONSE.error(res, 9999)
+        return RESPONSE.error(res, 9999);
     }
 
 }
@@ -52,7 +52,7 @@ const updateAdminProfile = async (req, res) => {
     try {
         const authUser = req.user;
         if (authUser.role != 'admin') {
-            return RESPONSE.error(res, 1105)
+            return RESPONSE.error(res, 1105);
         }
 
         const { name, current_password, new_password, phone_no } = req.body;
