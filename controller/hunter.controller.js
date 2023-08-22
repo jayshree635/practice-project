@@ -25,7 +25,7 @@ const hunterSignup = async (req, res) => {
     }
 
     try {
-        const { username, email, password, Auditor_role } = req.body;
+        const { username, email, password } = req.body;
         const profile_image = req?.file?.filename;
 
         const otp = Math.floor(100000 + Math.random() * 9000);
@@ -53,7 +53,7 @@ const hunterSignup = async (req, res) => {
             };
             await findHunter.update({ otp });
         } else {
-            const userData = await Hunter.create({ username, email, password, profile_image, otp, opt_time, Auditor_role });
+            const userData = await Hunter.create({ username, email, password, profile_image, otp, opt_time });
 
         }
         // const mail = mailUtils.sendMail("otp mail", `verify email otp  : ${otp}`);
@@ -79,7 +79,7 @@ const emailVerify = async (req, res) => {
     try {
         const { email, otp } = req.body;
         const currentTime = Date.now();
-        const isExist = await Hunter.findOne({ where: { email: email } })
+        const isExist = await Hunter.findOne({ where: { email: email, isVerify: false } })
         if (!isExist) {
             return RESPONSE.success(res, 1016)
         }
@@ -154,7 +154,7 @@ const updateHunterProfile = async (req, res) => {
             username
         }
 
-        
+
         const isExistUsername = await Hunter.findOne({ where: { username: username } });
         if (isExistUsername) {
             return RESPONSE.error(res, "username already exist")

@@ -41,7 +41,7 @@ const AddCompany = async (req, res) => {
         if (isExist) {
             return RESPONSE.error(res, 1007)
         }
-       
+
         const companyData = await Company.create({ name, email, password });
 
         delete companyData.password;
@@ -76,9 +76,16 @@ const getAllCompany = async (req, res) => {
 
 //................get company by id......................
 const getOneCompanyById = async (req, res) => {
+    let validation = new Validator(req.body, {
+        id: 'required'
+    });
+    if (validation.fails()) {
+        firstMessage = Object.keys(validation.errors.all())[0];
+        return RESPONSE.error(res, validation.errors.first(firstMessage));
+    }
     try {
         const authUser = req.user;
-        const id = req.query.id;
+        const { id } = req.body;
         if (authUser.role !== 'admin') {
             return RESPONSE.error(res, 1105)
         }
@@ -143,13 +150,15 @@ const updateCompanyProfile = async (req, res) => {
         const company_logo = req?.file?.filename;
 
         const object = {
-            name,
             about
         }
 
-        const isExistName = await Company.findOne({ where: { name: name } });
-        if (isExistName) {
-            return RESPONSE.error(res, 1308)
+        if (name) {
+            const isExistName = await Company.findOne({ where: { name: name } });
+            if (isExistName) {
+                return RESPONSE.error(res, 1308)
+            }
+            object.name = name
         }
 
         const findCompany = await Company.scope('withPassword').findOne({ where: { id: authUser.id } });
@@ -165,13 +174,14 @@ const updateCompanyProfile = async (req, res) => {
         };
 
         if (company_logo) {
-            if (findCompany.company_logo) {
-                await FILEACTION.deleteFile(path.basename(findCompany.company_logo), 'images/CompanyLogo');
-            }
             object.company_logo = company_logo;
         }
 
         const companyData = await Company.update(object, { where: { id: authUser.id } });
+
+        if (findCompany.company_logo) {
+            await FILEACTION.deleteFile(path.basename(findCompany.company_logo), 'images/CompanyLogo');
+        }
 
         return RESPONSE.success(res, 1305, companyData)
     } catch (error) {

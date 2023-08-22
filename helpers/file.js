@@ -19,6 +19,7 @@ function uploadFile(fileObjArray, pathFolder = 'image', fileFieldName = 'image')
         outStream.write(fileObj.buffer);
         outStream.end();
     }
+
     return profileImageName;
 }
 

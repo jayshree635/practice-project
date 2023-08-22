@@ -9,6 +9,7 @@ const UserSession = db.UserSession;
 
 //...............utils..........
 const checkMail = require('../utils/function')
+
 //...................admin add member by company_id...............
 const addCompanyMember = async (req, res) => {
     let validation = new Validator(req.body, {
@@ -51,12 +52,21 @@ const addCompanyMember = async (req, res) => {
 
 //..............................get All member Profile by admin.........................
 const getAllMemberProfileByAdmin = async (req, res) => {
+    let validation = new Validator(req.body, {
+        company_id: 'required'
+    })
+    if (validation.fails()) {
+        firstMessage = Object.keys(validation.errors.all())[0];
+        return RESPONSE.error(res, validation.errors.first(firstMessage));
+    };
+
     try {
+        const { company_id } = req.body;
         const authUser = req.user;
         if (authUser.role != 'admin') {
             return RESPONSE.error(res, 1105)
         }
-        const findAllMember = await CompanyMember.findAll();
+        const findAllMember = await CompanyMember.findAll({ where: { company_id: company_id } });
 
         if (!findAllMember) {
             return RESPONSE.error(res1204)
@@ -69,11 +79,20 @@ const getAllMemberProfileByAdmin = async (req, res) => {
     }
 }
 
+
 //..................admin get one company member by id..................
 const getOneCompanyMemberById = async (req, res) => {
+    let validation = new Validator(req.body, {
+        id: 'required'
+    });
+    if (validation.fails()) {
+        firstMessage = Object.keys(validation.errors.all())[0];
+        return RESPONSE.error(res, validation.errors.first(firstMessage))
+    }
+
     try {
         const authUser = req.user;
-        const id = req.query.id;
+        const { id } = req.body;
         if (authUser.role != 'admin') {
             return RESPONSE.error(res, 1105)
         }
@@ -134,10 +153,15 @@ const updateMemberProfile = async (req, res) => {
         const { username, current_password, new_password } = req.body;
         const profile_image = req?.file?.filename;
 
-        const object = {
-            username,
-        }
 
+        if (username) {
+            const isExistName = await Company.findOne({ where: { username: username } });
+            if (isExistName) {
+                return RESPONSE.error(res, 1308)
+            }
+            object.username = username;
+        }
+        
         const findMember = await CompanyMember.scope('withPassword').findOne({ where: { id: authUser.id } });
         if (!findMember) {
             return RESPONSE.error(res, 1204);
@@ -152,14 +176,14 @@ const updateMemberProfile = async (req, res) => {
         };
 
         if (profile_image) {
-            if (findMember.profile_image) {
-                await FILEACTION.deleteFile(path.basename(findMember.profile_image), 'images/profileImages');
-            }
             object.profile_image = profile_image;
         }
 
         const MemberData = await CompanyMember.update(object, { where: { id: authUser.id } });
 
+        if (findMember.profile_image) {
+            await FILEACTION.deleteFile(path.basename(findMember.profile_image), 'images/profileImages');
+        }
 
         return RESPONSE.success(res, 1205, MemberData)
     } catch (error) {

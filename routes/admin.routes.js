@@ -18,4 +18,10 @@ router.patch('/update-admin-profile', auth.authUser, uploadImage.uploadImage('pr
 
 
 
+//....................routes..................
+
+router.post('/login', adminController.login);
+
+router.delete('/logout', auth.authUser, adminController.logout);
+
 module.exports = router
