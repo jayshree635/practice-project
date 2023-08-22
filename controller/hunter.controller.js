@@ -154,6 +154,7 @@ const updateHunterProfile = async (req, res) => {
             username
         }
 
+        
         const isExistUsername = await Hunter.findOne({ where: { username: username } });
         if (isExistUsername) {
             return RESPONSE.error(res, "username already exist")

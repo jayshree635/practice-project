@@ -37,12 +37,11 @@ const AddCompany = async (req, res) => {
             return RESPONSE.error(res, "company name already exist")
         }
 
-
-        const isExist = await Company.findOne({ where: { email: email } });
+        const isExist = await checkEmail.checkEmail(email);
         if (isExist) {
             return RESPONSE.error(res, 1007)
         }
-
+       
         const companyData = await Company.create({ name, email, password });
 
         delete companyData.password;

@@ -7,7 +7,8 @@ const CompanyMember = db.Company_members;
 const Company = db.Company;
 const UserSession = db.UserSession;
 
-
+//...............utils..........
+const checkMail = require('../utils/function')
 //...................admin add member by company_id...............
 const addCompanyMember = async (req, res) => {
     let validation = new Validator(req.body, {
@@ -29,7 +30,7 @@ const addCompanyMember = async (req, res) => {
             return RESPONSE.error(res, 1105)
         }
 
-        const isExist = await CompanyMember.findOne({ where: { email: email } });
+        const isExist = await checkMail.checkEmail(email);
         if (isExist) {
             return RESPONSE.error(res, 1007)
         }
@@ -110,7 +111,6 @@ const getMemberProfile = async (req, res) => {
         return RESPONSE.error(res, 9999)
     }
 }
-
 
 //.................... update member profile.............
 
