@@ -17,11 +17,12 @@ function uploadFile(fileObjArray, pathFolder = 'image', fileFieldName = 'image')
         const uploadPath = './public/' + pathFolder + '/' + profileImageName;
         const outStream = fs.createWriteStream(uploadPath);
         outStream.write(fileObj.buffer);
-        outStream.end();
+        outStream.end()
     }
 
     return profileImageName;
 }
+
 
 async function deleteFile(fileName, pathFolder = 'images') {
     try {

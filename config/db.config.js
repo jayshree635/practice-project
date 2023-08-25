@@ -44,5 +44,5 @@ db.UserSession = require('../models/userSession.model')(sequelize, Sequelize);
 db.Company.hasMany(db.Company_members, { foreignKey: 'company_id' });
 db.Company_members.belongsTo(db.Company, { foreignKey: 'company_id' });
 
-// db.sequelize.sync({ alter: true });
+db.sequelize.sync({ alter: true });
 module.exports = db;

@@ -128,21 +128,47 @@ const getHunterProfile = async (req, res) => {
     }
 }
 
-
+Validator.register('jsonString', function (value, requirement, attribute) {
+    try {
+        JSON.parse(value);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}, 'The :attribute field must be a valid JSON string.');
 //.....................update hunter profile................
 const updateHunterProfile = async (req, res) => {
+
+
     let validation = new Validator(req.body, {
         username: 'string|max:50',
         current_password: 'required|min:6|max:15',
-        new_password: 'min:6|max:15'
+        new_password: 'min:6|max:15',
+        // questions: 'required',
+        'questions.que1': 'required|string',
+        'questions.que2': 'required|string',
+        'questions.que3': 'required|string'
+        // questions: 'required|object',
+        // 'questions.questions1': '',
+        // 'questions.questions2': '',
+        // 'questions.questions3': '',
+        // 'questions.questions4': '',
+        // 'questions.questions5': ''
     });
+    if (req.body.questions) {
+        validation['questions'] = 'required';
+        validation['questions.que1'] = 'required|string';
+        validation['questions.que2'] = 'required|string';
+        validation['questions.que3'] = 'required|string';
+    }
+
     if (validation.fails()) {
         firstMessage = Object.keys(validation.errors.all())[0];
         return RESPONSE.error(res, validation.errors.first(firstMessage))
     };
 
     try {
-        const { username, current_password, new_password } = req.body;
+        const { username, current_password, new_password, questions } = req.body;
         const profile_image = req?.file?.filename;
 
         const authUser = req.user;
@@ -151,7 +177,8 @@ const updateHunterProfile = async (req, res) => {
         }
 
         let object = {
-            username
+            username,
+            questions
         }
 
 

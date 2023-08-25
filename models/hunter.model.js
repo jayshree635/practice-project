@@ -34,7 +34,20 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.ENUM('Senior_auditor', 'Auditor', 'null'),
             defaultValue: 'null'
         },
+        questions: {
+            type: Sequelize.STRING,
+            // allowNull: false,
 
+            get() {
+                const questionData = this.getDataValue('questions');
+                return JSON.parse(questionData)
+            },
+
+            set(questionObj) {
+                this.setDataValue('questions', JSON.stringify(questionObj))
+            }
+
+        },
         otp: {
             type: Sequelize.INTEGER,
 
